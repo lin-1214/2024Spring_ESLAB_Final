@@ -11,19 +11,16 @@
 
 using namespace std::literals::chrono_literals;
 
-const static char DEVICE_NAME[] = "Heartrate";
+const static char DEVICE_NAME[] = "FUCK_ESLAB";
 
 static events::EventQueue event_queue(/* event count */ 16 * EVENTS_EVENT_SIZE);
 
-class HeartrateDemo : ble::Gap::EventHandler {
+class SensorDemo : ble::Gap::EventHandler {
 public:
-    HeartrateDemo(BLE &ble, events::EventQueue &event_queue) :
+    SensorDemo(BLE &ble, events::EventQueue &event_queue) :
         _ble(ble),
-        _event_queue(event_queue),
-        _heartrate_uuid(GattService::UUID_HEART_RATE_SERVICE),
+        _event_queue(event_queue),       
         _sensor_uuid(CUSTOM_SENSOR_SERVICE_UUID),//added
-        _heartrate_value(100),
-        _heartrate_service(ble, _heartrate_value, HeartRateService::LOCATION_FINGER),
         _sensor_service(ble),//added
         _adv_data_builder(_adv_buffer)
     {
@@ -31,7 +28,7 @@ public:
 
     void start()
     {
-        _ble.init(this, &HeartrateDemo::on_init_complete);
+        _ble.init(this, &SensorDemo::on_init_complete);
 
         _event_queue.dispatch_forever();
     }
@@ -73,8 +70,9 @@ private:
         _adv_data_builder.setFlags();
         _adv_data_builder.setAppearance(ble::adv_data_appearance_t::GENERIC_HEART_RATE_SENSOR);
 
-        UUID service_uuids[] = {_heartrate_uuid, _sensor_uuid};
-        _adv_data_builder.setLocalServiceList(service_uuids, sizeof(service_uuids) / sizeof(UUID));
+        //UUID service_uuids[] = {_heartrate_uuid, _sensor_uuid};
+        _adv_data_builder.setLocalServiceList({&_sensor_uuid, 1});
+        //_adv_data_builder.setLocalServiceList(service_uuids, sizeof(service_uuids) / sizeof(UUID));
         _adv_data_builder.setName(DEVICE_NAME);
 
         /* Setup advertising */
@@ -113,20 +111,11 @@ private:
 
     void update_sensor_value()
     {
-        /* you can read in the real value but here we just simulate a value */
-        _heartrate_value++;
-
-        /*  60 <= bpm value < 110 */
-        if (_heartrate_value == 110) {
-            _heartrate_value = 60;
-        }
-
-        //BSP_GYRO_GetXYZ(pGyroDataXYZ);
-        //_GyroDataXYZ.x=pGyroDataXYZ[0];
-        //_GyroDataXYZ.y=pGyroDataXYZ[1];
-        //_GyroDataXYZ.z=pGyroDataXYZ[2];
-
-        _heartrate_service.updateHeartRate(_heartrate_value);
+        float pGyroDataXYZ[3];
+        BSP_GYRO_GetXYZ(pGyroDataXYZ);
+        _GyroDataXYZ.x=pGyroDataXYZ[0];
+        _GyroDataXYZ.y=pGyroDataXYZ[1];
+        _GyroDataXYZ.z=pGyroDataXYZ[2];
         _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);//added
     }
 
@@ -157,14 +146,11 @@ private:
     BLE &_ble;
     events::EventQueue &_event_queue;
 
-    UUID _heartrate_uuid;
     UUID _sensor_uuid;// added
     
-    uint16_t _heartrate_value;
     SensorService::GyroType_t _GyroDataXYZ;//added
     //float pGyroDataXYZ[3];
     
-    HeartRateService _heartrate_service;
     SensorService _sensor_service;//added
 
     uint8_t _adv_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE];
@@ -180,12 +166,12 @@ void schedule_ble_events(BLE::OnEventsToProcessCallbackContext *context)
 int main()
 {
     mbed_trace_init();
-    //BSP_GYRO_Init();
+    BSP_GYRO_Init();
 
     BLE &ble = BLE::Instance();
     ble.onEventsToProcess(schedule_ble_events);
 
-    HeartrateDemo demo(ble, event_queue);
+    SensorDemo demo(ble, event_queue);
     demo.start();
 
     return 0;
