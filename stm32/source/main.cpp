@@ -1,4 +1,5 @@
 #include "mbed.h"
+#include <cstdint>
 #include <events/mbed_events.h>
 #include "ble/BLE.h"
 #include "ble/gap/Gap.h"
@@ -174,6 +175,7 @@ private:
 
     UUID _sensor_uuid;// added
     
+    uint8_t command;
     SensorService::GyroType_t _GyroDataXYZ;//added    
     SensorService _sensor_service;//added
 

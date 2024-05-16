@@ -47,6 +47,7 @@ public:
     {
         if (params->handle == CommandCharacteristic.getValueHandle()) {
             uint8_t commandReceived = *(params->data);
+            printf("Command received: %d\n", commandReceived);
             handleCommand(commandReceived);
         }
     }
