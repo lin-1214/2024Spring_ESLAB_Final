@@ -18,16 +18,14 @@ public:
     SensorService(BLE& _ble) :
         ble(_ble),
         GyroCharacteristic(CUSTOM_GYRO_CHAR_UUID, (uint8_t *)&pGyroDataXYZ, sizeof(GyroType_t), sizeof(GyroType_t),
-                           GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY),
-        CommandCharacteristic(CUSTOM_COMMAND_CHAR_UUID, &command, sizeof(command), sizeof(command),
-                              GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_WRITE)
+                           GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY)
     {
         static bool serviceAdded = false; /* We should only ever need to add the information service once. */
         if (serviceAdded) {
             return;
         }
 
-        GattCharacteristic *charTable[] = {&GyroCharacteristic, &CommandCharacteristic};
+        GattCharacteristic *charTable[] = {&GyroCharacteristic};
 
         GattService sensorService(CUSTOM_SENSOR_SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
 
@@ -43,20 +41,6 @@ public:
         ble.gattServer().write(GyroCharacteristic.getValueHandle(), (uint8_t *)&pGyroDataXYZ, sizeof(GyroType_t));
     }
 
-    void onDataWritten(const GattWriteCallbackParams *params)
-    {
-        if (params->handle == CommandCharacteristic.getValueHandle()) {
-            uint8_t commandReceived = *(params->data);
-            printf("Command received: %d\n", commandReceived);
-            handleCommand(commandReceived);
-        }
-    }
-
-    void handleCommand(uint8_t command) {
-        // Implement command
-        // PWM outputs etc.
-    }
-
 private:
     BLE& ble;
 
@@ -64,7 +48,6 @@ private:
     uint8_t command;
 
     GattCharacteristic GyroCharacteristic;
-    GattCharacteristic CommandCharacteristic;
 };
 
 #endif
