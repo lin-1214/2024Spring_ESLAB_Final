@@ -1,17 +1,38 @@
+#include "mbed.h"
 #include <events/mbed_events.h>
 #include "ble/BLE.h"
 #include "ble/gap/Gap.h"
 #include "ble/services/HeartRateService.h"
 #include "pretty_printer.h"
 #include "mbed-trace/mbed_trace.h"
-#include "EnvironmentalService.h"
 #include "SensorService.h"
-
 #include "stm32l475e_iot01_gyro.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstdio>
+#include <string>
+#include "arm_math.h"
+#include "math_helper.h"
 
 using namespace std::literals::chrono_literals;
 
-const static char DEVICE_NAME[] = "FUCK_ESLAB";
+const static char DEVICE_NAME[] = "FUCK_TA";
+
+//filter related==========================================================================
+#define NUM_TAPS 29
+#define BLOCK_SIZE 32
+static float32_t firStateF32[BLOCK_SIZE + NUM_TAPS - 1];
+static const float32_t firCoeffs32[NUM_TAPS] = {
+    // FIR
+    -0.0018225230f, -0.0015879294f, +0.0000000000f, +0.0036977508f, +0.0080754303f, +0.0085302217f, -0.0000000000f, -0.0173976984f,
+  -0.0341458607f, -0.0333591565f, +0.0000000000f, +0.0676308395f, +0.1522061835f, +0.2229246956f, +0.2504960933f, +0.2229246956f,
+  +0.1522061835f, +0.0676308395f, +0.0000000000f, -0.0333591565f, -0.0341458607f, -0.0173976984f, -0.0000000000f, +0.0085302217f,
+  +0.0080754303f, +0.0036977508f, +0.0000000000f, -0.0015879294f, -0.0018225230f
+};
+
+arm_fir_instance_f32 S;
+//========================================================================================
 
 static events::EventQueue event_queue(/* event count */ 16 * EVENTS_EVENT_SIZE);
 
@@ -24,6 +45,7 @@ public:
         _sensor_service(ble),//added
         _adv_data_builder(_adv_buffer)
     {
+        arm_fir_init_f32(&S, NUM_TAPS, (float32_t *)&firCoeffs32[0], &firStateF32[0], BLOCK_SIZE);
     }
 
     void start()
@@ -69,10 +91,7 @@ private:
 
         _adv_data_builder.setFlags();
         _adv_data_builder.setAppearance(ble::adv_data_appearance_t::GENERIC_HEART_RATE_SENSOR);
-
-        //UUID service_uuids[] = {_heartrate_uuid, _sensor_uuid};
         _adv_data_builder.setLocalServiceList({&_sensor_uuid, 1});
-        //_adv_data_builder.setLocalServiceList(service_uuids, sizeof(service_uuids) / sizeof(UUID));
         _adv_data_builder.setName(DEVICE_NAME);
 
         /* Setup advertising */
@@ -106,16 +125,23 @@ private:
             return;
         }
 
-        printf("Heart rate sensor advertising, please connect\r\n");
+        printf("Sensor service advertising, please connect\r\n");
     }
 
     void update_sensor_value()
     {
-        float pGyroDataXYZ[3];
-        BSP_GYRO_GetXYZ(pGyroDataXYZ);
-        _GyroDataXYZ.x=pGyroDataXYZ[0];
-        _GyroDataXYZ.y=pGyroDataXYZ[1];
-        _GyroDataXYZ.z=pGyroDataXYZ[2];
+        float sensorData[3];
+        BSP_GYRO_GetXYZ(sensorData);
+
+        //filter
+        float filteredData[3];
+        for (int i = 0; i < 3; i++) {
+            arm_fir_f32(&S, &sensorData[i], &filteredData[i], 1);
+        }
+        //
+        _GyroDataXYZ.x=filteredData[0];
+        _GyroDataXYZ.y=filteredData[1];
+        _GyroDataXYZ.z=filteredData[2];
         _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);//added
     }
 
@@ -148,9 +174,7 @@ private:
 
     UUID _sensor_uuid;// added
     
-    SensorService::GyroType_t _GyroDataXYZ;//added
-    //float pGyroDataXYZ[3];
-    
+    SensorService::GyroType_t _GyroDataXYZ;//added    
     SensorService _sensor_service;//added
 
     uint8_t _adv_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE];
