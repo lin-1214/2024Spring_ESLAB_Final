@@ -1,0 +1,25 @@
+.StartWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 30vh;
+    width: 40vw;
+    border: 5px solid #000;
+    background-color: aliceblue;
+    border-radius: 5%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1vh;
+}
+
+.title {
+    font-size: 2.2em;
+    color: cornflowerblue;
+    font-weight: 900;
+}

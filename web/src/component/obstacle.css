@@ -1,0 +1,27 @@
+.Obstacles {
+  animation: scaling-moving 5s infinite ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  width: 15vw;
+  height: 5vh;
+}
+
+.Obstacle {
+  background-image: url("../assets/meteorite.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 5vh;
+  height: 5vh;
+}
+
+@keyframes scaling-moving {
+  0% {
+    transform: scale(0) translateY(0vh);
+  }
+  10% {
+    transform: scale(0.1) translateY(1vh);
+  }
+  100% {
+    transform: scale(6) translateY(20vh);
+  }
+}
