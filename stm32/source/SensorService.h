@@ -4,11 +4,13 @@
 #include "ble/BLE.h"
 
 #define CUSTOM_GYRO_CHAR_UUID      "43080fde-e247-4bd5-b7b2-6c80ec3e526e"
-#define CUSTOM_COMMAND_CHAR_UUID   "775406ec-7c9e-40c9-a4eb-bc67fca3e135"
 #define CUSTOM_SENSOR_SERVICE_UUID "e31368d2-3247-4b01-8ece-3a2bf602808f"
 
 class SensorService {
 public:
+
+    const static uint16_t WRITABLE_CHARACTERISTIC_UUID = 0xA001;
+
     typedef struct {
         float x;
         float y;
@@ -25,11 +27,19 @@ public:
             return;
         }
 
-        GattCharacteristic *charTable[] = {&GyroCharacteristic};
+        const UUID uuid = WRITABLE_CHARACTERISTIC_UUID;
+        _writable_characteristic = new ReadWriteGattCharacteristic<uint8_t> (uuid, &_characteristic_value);
+
+        if (!_writable_characteristic) {
+            printf("Allocation of ReadWriteGattCharacteristic failed\r\n");
+        }
+
+        GattCharacteristic *charTable[] = {&GyroCharacteristic, &_writable_characteristic};
 
         GattService sensorService(CUSTOM_SENSOR_SERVICE_UUID, charTable, sizeof(charTable) / sizeof(GattCharacteristic *));
 
         ble.gattServer().addService(sensorService);
+        ble.gattServer().setEventHandler(this);
         serviceAdded = true;
     }
 
@@ -40,6 +50,13 @@ public:
         pGyroDataXYZ.z = newpGyroDataXYZ.z;
         ble.gattServer().write(GyroCharacteristic.getValueHandle(), (uint8_t *)&pGyroDataXYZ, sizeof(GyroType_t));
     }
+private:
+    virtual void onDataWritten(const GattWriteCallbackParams &params)
+    {
+        if ((params.handle == _writable_characteristic->getValueHandle()) && (params.len == 1)) {
+            printf("New characteristic value written: %x\r\n", *(params.data));
+        }
+    }
 
 private:
     BLE& ble;
@@ -48,6 +65,9 @@ private:
     uint8_t command;
 
     GattCharacteristic GyroCharacteristic;
+
+    ReadWriteGattCharacteristic<uint8_t> *_writable_characteristic = nullptr;
+    uint8_t _characteristic_value = 0;
 };
 
 #endif
