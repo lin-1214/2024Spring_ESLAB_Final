@@ -3,7 +3,7 @@ import { useData } from "../hooks/useData";
 import './obstacle.css'
 
 function Obstacle() {
-  const { obstaclePos, setObstaclePos, obstaclesRef } = useData();
+  const { obstaclePos, setObstaclePos } = useData();
   const [pos1, setPos1] = useState('0');
   const [pos2, setPos2] = useState('1');
   const [pos3, setPos3] = useState('0');

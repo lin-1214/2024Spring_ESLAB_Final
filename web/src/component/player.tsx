@@ -11,7 +11,7 @@ declare global {
 
 function Player() {
   // 0: same, 1: right, -1: left, 2: turning right, -2: turning left
-  const { planeState, setPlaneState, relaod, setReload, planePos, setPlanePos, speed, setSpeed, planeRef} = useData();
+  const { planeState, setPlaneState, relaod, setReload, planePos, setPlanePos, speed, setSpeed} = useData();
   const handleUserKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const { key } = event
       // mapping
