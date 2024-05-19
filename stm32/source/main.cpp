@@ -3,7 +3,6 @@
 #include <events/mbed_events.h>
 #include "ble/BLE.h"
 #include "ble/gap/Gap.h"
-#include "ble/services/HeartRateService.h"
 #include "pretty_printer.h"
 #include "mbed-trace/mbed_trace.h"
 #include "SensorService.h"
@@ -18,22 +17,20 @@
 
 using namespace std::literals::chrono_literals;
 
-const static char DEVICE_NAME[] = "FUCK_TA";
+const static char DEVICE_NAME[] = "SENSOR_DEVICE";
 
-//filter related==========================================================================
+// Filter related constants
 #define NUM_TAPS 29
 #define BLOCK_SIZE 32
 static float32_t firStateF32[BLOCK_SIZE + NUM_TAPS - 1];
 static const float32_t firCoeffs32[NUM_TAPS] = {
-    // FIR
     -0.0018225230f, -0.0015879294f, +0.0000000000f, +0.0036977508f, +0.0080754303f, +0.0085302217f, -0.0000000000f, -0.0173976984f,
-  -0.0341458607f, -0.0333591565f, +0.0000000000f, +0.0676308395f, +0.1522061835f, +0.2229246956f, +0.2504960933f, +0.2229246956f,
-  +0.1522061835f, +0.0676308395f, +0.0000000000f, -0.0333591565f, -0.0341458607f, -0.0173976984f, -0.0000000000f, +0.0085302217f,
-  +0.0080754303f, +0.0036977508f, +0.0000000000f, -0.0015879294f, -0.0018225230f
+    -0.0341458607f, -0.0333591565f, +0.0000000000f, +0.0676308395f, +0.1522061835f, +0.2229246956f, +0.2504960933f, +0.2229246956f,
+    +0.1522061835f, +0.0676308395f, +0.0000000000f, -0.0333591565f, -0.0341458607f, -0.0173976984f, -0.0000000000f, +0.0085302217f,
+    +0.0080754303f, +0.0036977508f, +0.0000000000f, -0.0015879294f, -0.0018225230f
 };
 
 arm_fir_instance_f32 S;
-//========================================================================================
 
 static events::EventQueue event_queue(/* event count */ 16 * EVENTS_EVENT_SIZE);
 
@@ -42,8 +39,8 @@ public:
     SensorDemo(BLE &ble, events::EventQueue &event_queue) :
         _ble(ble),
         _event_queue(event_queue),       
-        _sensor_uuid(CUSTOM_SENSOR_SERVICE_UUID),//added
-        _sensor_service(ble),//added
+        _sensor_uuid(CUSTOM_SENSOR_SERVICE_UUID),
+        _sensor_service(ble),
         _adv_data_builder(_adv_buffer)
     {
         arm_fir_init_f32(&S, NUM_TAPS, (float32_t *)&firCoeffs32[0], &firStateF32[0], BLOCK_SIZE);
@@ -61,16 +58,16 @@ private:
     void on_init_complete(BLE::InitializationCompleteCallbackContext *params)
     {
         if (params->error != BLE_ERROR_NONE) {
-            printf("Ble initialization failed.");
+            printf("Ble initialization failed.\r\n");
             return;
         }
 
         print_mac_address();
 
-        /* this allows us to receive events like onConnectionComplete() */
+        /* This allows us to receive events like onConnectionComplete() */
         _ble.gap().setEventHandler(this);
 
-        /* heart rate value updated every second */
+        /* Sensor value updated every second */
         _event_queue.call_every(
             1000ms,
             [this] {
@@ -134,21 +131,20 @@ private:
         float sensorData[3];
         BSP_GYRO_GetXYZ(sensorData);
 
-        //filter
+        // Filter
         float filteredData[3];
         for (int i = 0; i < 3; i++) {
             arm_fir_f32(&S, &sensorData[i], &filteredData[i], 1);
         }
-        //
-        _GyroDataXYZ.x=filteredData[0];
-        _GyroDataXYZ.y=filteredData[1];
-        _GyroDataXYZ.z=filteredData[2];
-        _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);//added
+
+        _GyroDataXYZ.x = filteredData[0];
+        _GyroDataXYZ.y = filteredData[1];
+        _GyroDataXYZ.z = filteredData[2];
+        _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);
     }
 
-    /* these implement ble::Gap::EventHandler */
+    /* These implement ble::Gap::EventHandler */
 private:
-    /* when we connect we stop advertising, restart advertising so others can connect */
     virtual void onConnectionComplete(const ble::ConnectionCompleteEvent &event)
     {
         if (event.getStatus() == ble_error_t::BLE_ERROR_NONE) {
@@ -156,7 +152,6 @@ private:
         }
     }
 
-    /* when we connect we stop advertising, restart advertising so others can connect */
     virtual void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event)
     {
         printf("Client disconnected, restarting advertising\r\n");
@@ -173,11 +168,10 @@ private:
     BLE &_ble;
     events::EventQueue &_event_queue;
 
-    UUID _sensor_uuid;// added
+    UUID _sensor_uuid;
     
-    uint8_t command;
-    SensorService::GyroType_t _GyroDataXYZ;//added    
-    SensorService _sensor_service;//added
+    SensorService::GyroType_t _GyroDataXYZ;    
+    SensorService _sensor_service;
 
     uint8_t _adv_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE];
     ble::AdvertisingDataBuilder _adv_data_builder;
@@ -202,4 +196,3 @@ int main()
 
     return 0;
 }
-
