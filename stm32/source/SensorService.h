@@ -1,8 +1,10 @@
 #ifndef __BLE_SENSOR_SERVICE_H__
 #define __BLE_SENSOR_SERVICE_H__
 
+#include "mbed.h"
 #include "ble/BLE.h"
 #include "ble/GattServer.h"
+#include <cstdint>
 
 #define CUSTOM_GYRO_CHAR_UUID      "43080fde-e247-4bd5-b7b2-6c80ec3e526e"
 #define CUSTOM_SENSOR_SERVICE_UUID "e31368d2-3247-4b01-8ece-3a2bf602808f"
@@ -19,6 +21,7 @@ public:
 
     SensorService(BLE& _ble) :
         ble(_ble),
+        pwm(PA_15),
         GyroCharacteristic(CUSTOM_GYRO_CHAR_UUID, (uint8_t *)&pGyroDataXYZ, sizeof(GyroType_t), sizeof(GyroType_t),
                            GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_READ | GattCharacteristic::BLE_GATT_CHAR_PROPERTIES_NOTIFY)
     {
@@ -54,15 +57,40 @@ public:
     virtual void onDataWritten(const GattWriteCallbackParams &params) override
     {
         if ((params.handle == _writable_characteristic->getValueHandle()) && (params.len == 1)) {
-            printf("New characteristic value written: %x\r\n", *(params.data));
+            printf("New characteristic value written: %x\r\n", *(params.data));     
+            uint8_t value = *(params.data);
+            switch(value){
+                case 1:
+                    pwm.period(0.001f);  // 1 kHz
+                    pwm.write(0.5f);     // 50% duty cycle
+                    break;
+                case 2:
+                    pwm.period(0.002f);  // 500 Hz
+                    pwm.write(0.25f);    // 25% duty cycle
+                    break;
+                case 3:
+                    pwm.period(0.004f);  // 250 Hz
+                    pwm.write(0.75f);    // 75% duty cycle
+                    break;
+                case 4:
+                    pwm.period(0.008f);  // 125 Hz
+                    pwm.write(0.1f);     // 10% duty cycle
+                    break;
+                default:
+                    pwm.write(0.0f);     // turn off
+                    break;
+            }
         }
     }
+
 
 private:
     BLE& ble;
 
     GyroType_t pGyroDataXYZ;
     uint8_t command;
+
+    PwmOut pwm;
 
     GattCharacteristic GyroCharacteristic;
 
