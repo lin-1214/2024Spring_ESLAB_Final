@@ -6,9 +6,9 @@
 #include <stdexcept>
 
 template<typename T, size_t Size>
-class CircularBuffer {
+class Circular_Buffer {
 public:
-    CircularBuffer() : head(0), tail(0), is_full(false) {}
+    Circular_Buffer() : head(0), tail(0), is_full(false) {}
 
     void put(T item) {
         buffer[head] = item;

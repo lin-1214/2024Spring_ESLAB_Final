@@ -5,6 +5,7 @@
 #include "ble/gap/Gap.h"
 #include "pretty_printer.h"
 #include "mbed-trace/mbed_trace.h"
+#include "CircularBuffer.h"
 #include "SensorService.h"
 
 #include "stm32l475e_iot01_gyro.h"
@@ -69,10 +70,17 @@ private:
         _ble.gap().setEventHandler(this);
 
         /* Sensor value updated every second */
-        _event_queue.call_every(
-            1000ms,
+        _event_queue.call_every( //update
+            50ms,
             [this] {
                 update_sensor_value();
+            }
+        );
+
+        _event_queue.call_every( //gather
+            1ms,
+            [this] {
+                gather_data();
             }
         );
 
@@ -127,21 +135,25 @@ private:
         printf("Sensor service advertising, please connect\r\n");
     }
 
-    void update_sensor_value()
+    void update_sensor_value() //pass through the filter and then update every 50ms
     {
-        float sensorData[3];
-        BSP_GYRO_GetXYZ(sensorData);
-
         // Filter
         float filteredData[3];
+
         for (int i = 0; i < 3; i++) {
-            arm_fir_f32(&S, &sensorData[i], &filteredData[i], 1);
+            arm_fir_f32(&S, &sensorData[i], &filteredData[i], 64);
         }
 
         _GyroDataXYZ.x = filteredData[0];
         _GyroDataXYZ.y = filteredData[1];
         _GyroDataXYZ.z = filteredData[2];
         _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);
+    }
+
+    void gather_data(){ //gather data every 1ms
+        BSP_GYRO_GetXYZ(sensorData);
+        _circular_buffer.put(sensorData[0]); //put x-value into buffer
+        //_circular_buffer.put(sensorData); //put 3-axis simultaneously
     }
 
     /* These implement ble::Gap::EventHandler */
@@ -170,8 +182,12 @@ private:
     events::EventQueue &_event_queue;
 
     UUID _sensor_uuid;
-    
-    SensorService::GyroType_t _GyroDataXYZ;    
+
+    float sensorData[3];//data need to be put into buffer
+
+    Circular_Buffer<float, 128> _circular_buffer; //if only send x-value
+
+    SensorService::GyroType_t _GyroDataXYZ;//struct
     SensorService _sensor_service;
 
     uint8_t _adv_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE];
