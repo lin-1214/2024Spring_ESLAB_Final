@@ -6,6 +6,7 @@
 #include "pretty_printer.h"
 #include "mbed-trace/mbed_trace.h"
 #include "SensorService.h"
+
 #include "stm32l475e_iot01_gyro.h"
 
 #include <stdio.h>
