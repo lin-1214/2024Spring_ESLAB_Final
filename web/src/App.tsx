@@ -8,9 +8,14 @@ function App() {
 
     const connectBLE = async () => {
         const device = await navigator.bluetooth.requestDevice({
-            acceptAllDevices: true,
-            // filters: [{ name: "None" }],
-            optionalServices: [0x181c],
+            // acceptAllDevices: true,
+            filters: [
+                {
+                    // namePrefix: "FUCK_TA",
+                    services: ["e31368d2-3247-4b01-8ece-3a2bf602808f"],
+                },
+            ],
+            // optionalServices: [0x181c],
         });
 
         if (!device.gatt) {
@@ -20,20 +25,22 @@ function App() {
             return;
         }
         const server = await device.gatt.connect();
-        const service = await server.getPrimaryService(0x180d);
+        const service = await server.getPrimaryService("e31368d2-3247-4b01-8ece-3a2bf602808f");
         const characteristic = await service.getCharacteristic(
-            "E22890D2-BC56-4DC4-AD6C-01A0BB3979A5"
+            "43080fde-e247-4bd5-b7b2-6c80ec3e526e"
         );
         characteristic.addEventListener("characteristicvaluechanged", handleData);
+        characteristic.startNotifications();
         return { server, characteristic };
     };
     const handleData = (event: Event) => {
         const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
         // Your data handling code goes here
         // Example:
-        const decoder = new TextDecoder("utf-8");
-        const text = decoder.decode(value);
-        console.log(text);
+        console.log(value);
+        // const decoder = new TextDecoder("hex");
+        // const text = decoder.decode(value);
+        // console.log(text);
     };
     useEffect(() => {
         // Your BLE connection setup code goes here
