@@ -41,6 +41,7 @@ static const float32_t firCoeffs32[NUM_TAPS] = {
 arm_fir_instance_f32 S;
 
 static events::EventQueue event_queue(/* event count */ 16 * EVENTS_EVENT_SIZE);
+InterruptIn button(BUTTON1);
 
 class SensorDemo : ble::Gap::EventHandler {
    public:
@@ -170,7 +171,10 @@ class SensorDemo : ble::Gap::EventHandler {
         /************************************************************/
         _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);
     }
-
+    /*********************Button***********************/
+    void button_pressed() {}
+    void button_released() { _sensor_service.write(1); }
+    /**************************************************/
     void gather_data() {  // gather data every 1ms
         BSP_ACCELERO_AccGetXYZ(sensorData);
         // BSP_GYRO_GetXYZ(sensorData);

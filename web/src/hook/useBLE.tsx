@@ -7,9 +7,10 @@ const BLEContext = React.createContext({
     connect: () => {},
     write: (data: Int16Array) => {},
     velocity: 0,
+    command: 0,
 });
 
-const useBLE = () => {
+const useBLE = (props: any) => {
     const [server, setServer] = useState<BluetoothRemoteGATTServer>(null!);
     const [readCharacteristic, setReadCharacteristic] = useState<BluetoothRemoteGATTCharacteristic>(
         null!
@@ -17,6 +18,7 @@ const useBLE = () => {
     const [writeCharacteristic, setWriteCharacteristic] =
         useState<BluetoothRemoteGATTCharacteristic>(null!);
     const [velocity, setVelocity] = useState(0);
+    const [command, setCommand] = useState(0);
 
     const connect = async () => {
         const device = await navigator.bluetooth.requestDevice({
@@ -56,7 +58,11 @@ const useBLE = () => {
         }
         let data = new Int16Array(value.buffer);
         console.log("Data received: ", data);
-        setVelocity(data[0]);
+        if (data[0] > 16) {
+            setCommand(data[0]);
+        } else {
+            setVelocity(data[0]);
+        }
     };
     const write = (data: Int16Array) => {
         if (!writeCharacteristic) {
@@ -66,7 +72,12 @@ const useBLE = () => {
         // writecharacteristic?.writeValue(new Uint8Array([0x02]));
         writeCharacteristic.writeValueWithResponse(data);
     };
-    return { server, readCharacteristic, writeCharacteristic, connect, velocity, write };
+    return (
+        <BLEContext.Provider
+            value={{ server, readCharacteristic, writeCharacteristic, connect, velocity, write }}
+            {...props}
+        />
+    );
 };
 const useBLEContext = () => useContext(BLEContext);
 
