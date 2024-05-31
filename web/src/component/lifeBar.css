@@ -1,0 +1,45 @@
+.LifeBarWrapper {
+    width: 30vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    background-image: url("../assets/barTexture.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 3px solid black;
+}
+
+.LifeBarImg {
+    background-image: url("../assets/rocket.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 10vh;
+    height: 10vh;
+}
+
+.LifeBar3 {
+    background-color: green;
+    border: 1px solid black;
+    margin-right: 2vh;
+    margin-left: 2vh;
+    width: 6vw;
+    height: 4vh;
+}
+
+.LifeBar2 {
+    background-color: green;
+    border: 1px solid black;
+    margin-right: 2vh;
+    margin-left: 2vh;
+    width: 6vw;
+    height: 4vh;
+}
+
+.LifeBar1 {
+    background-color: green;
+    border: 1px solid black;
+    margin-right: 2vh;
+    margin-left: 2vh;
+    width: 6vw;
+    height: 4vh;
+}

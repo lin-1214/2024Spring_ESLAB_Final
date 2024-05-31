@@ -6,6 +6,17 @@
     height: 20vw;
 }
 
+.Player-C {
+    animation-name: collision;
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+    background-image: url("../assets/spaceship-collision.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 20vw;
+    height: 20vw;
+}
+
 .Player-R {
     animation-name: right-turn;
     animation-duration: 0.1s;
@@ -85,4 +96,12 @@
     100% {
         transform: rotate(0deg);
     }
+}
+
+@keyframes collision {
+    0% { transform: translateX(0) }
+    25% { transform: translateX(10px) }
+    50% { transform: translateX(-10px) }
+    75% { transform: translateX(10px) }
+    100% { transform: translateX(0) }
 }
