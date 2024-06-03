@@ -12,7 +12,7 @@ interface DataProps {
     obstaclePos: number;
     collision: boolean;
     planeBorder: number[]; 
-    obstaclesBorder: number[][];
+    // obstaclesBorder: number[][];
     life: number;
     collisionRange: number;
     // modulate the sending frequency of data
@@ -20,6 +20,8 @@ interface DataProps {
     // stm32 sample frequency
     sample_freq: number;
     score: number;
+    // player region
+    region: number[];
 
     setStart: (start: boolean) => void;
     setGameOver: (gameover: boolean) => void;
@@ -30,12 +32,13 @@ interface DataProps {
     setObstaclePos: (obstaclePos: number) => void;
     setCollision: (collision: boolean) => void;
     setplaneBorder: (planeBorder: number[]) => void;
-    setObstaclesBorder: (obstaclesBorder: number[][]) => void;
+    // setObstaclesBorder: (obstaclesBorder: number[][]) => void;
     setLife: (life: number) => void;
     setCollisionRange: (collisionRange: number) => void;
     setTick: (tick: number) => void;
     setSampleFreq: (sample_freq: number) => void;
     setScore: (score: number) => void;
+    setRegion: (region: number[]) => void;
 }
 
 const Data = createContext<DataProps>({
@@ -48,12 +51,13 @@ const Data = createContext<DataProps>({
     obstaclePos: 0,
     collision: false,
     planeBorder: [0, 0],
-    obstaclesBorder: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+    // obstaclesBorder: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
     life: 0,
     collisionRange: 0,
     tick: 0,
     sample_freq: 0,
     score: 0,
+    region: [0, 0],
 
     setStart: () => {},
     setGameOver: () => {},
@@ -64,12 +68,13 @@ const Data = createContext<DataProps>({
     setObstaclePos: () => {},
     setCollision: () => {},
     setplaneBorder: () => {},
-    setObstaclesBorder: () => {},
+    // setObstaclesBorder: () => {},
     setLife: () => {},
     setCollisionRange: () => {},
     setTick: () => {},
     setSampleFreq: () => {},
-    setScore: () => {}
+    setScore: () => {},
+    setRegion: () => {},
 });
 
 interface UserDataProviderProps {
@@ -86,12 +91,13 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
     const [obstaclePos, setObstaclePos] = useState(0);
     const [collision, setCollision] = useState(false);
     const [planeBorder, setplaneBorder] = useState([0, 0]);
-    const [obstaclesBorder, setObstaclesBorder] = useState([[0, 0, 0], [0, 0, 0], [0, 0, 0]]);
+    // const [obstaclesBorder, setObstaclesBorder] = useState([[0, 0, 0], [0, 0, 0], [0, 0, 0]]);
     const [life, setLife] = useState(3);
     const [collisionRange, setCollisionRange] = useState(0);
     const [tick, setTick] = useState(0);
     const [sample_freq, setSampleFreq] = useState(10); // 10Hz
     const [score, setScore] = useState(0);
+    const [region, setRegion] = useState([0, 0]);
 
     return (
         <Data.Provider
@@ -105,12 +111,13 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
                 obstaclePos,
                 collision,
                 planeBorder,
-                obstaclesBorder,
+                // obstaclesBorder,
                 life,
                 collisionRange,
                 tick,
                 sample_freq,
                 score,
+                region,
                 setStart,
                 setGameOver,
                 setReload,
@@ -120,12 +127,13 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
                 setObstaclePos,
                 setCollision,
                 setplaneBorder,
-                setObstaclesBorder,
+                // setObstaclesBorder,
                 setLife,
                 setCollisionRange,
                 setTick,
                 setSampleFreq,
-                setScore
+                setScore,
+                setRegion
             }}
             {...props}
         ></Data.Provider>

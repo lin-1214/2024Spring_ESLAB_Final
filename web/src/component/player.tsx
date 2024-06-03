@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useData } from "../hooks/useData";
+import { useBLE } from "../hooks/useBLE";
 import './player.css'
 
 declare global {

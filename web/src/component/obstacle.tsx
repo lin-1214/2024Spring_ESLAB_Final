@@ -3,7 +3,7 @@ import { useData } from "../hooks/useData";
 import './obstacle.css'
 
 function Obstacle() {
-  const { obstaclePos, setObstaclePos, setCollision, planeBorder, tick, life, setTick, setLife, score, setScore } = useData();
+  const { obstaclePos, setObstaclePos, setCollision, planeBorder, tick, life, setTick, setLife, region } = useData();
   const [pos1, setPos1] = useState('0');
   const [pos2, setPos2] = useState('0');
   const [pos3, setPos3] = useState('0');
@@ -33,9 +33,9 @@ function Obstacle() {
   useEffect(() => {
     // console.log(tick)
     if (tick >= 44 && tick <= 65) {
-      // collision region 1 [425-150, 425+125]
+      // collision region 1 [260, 425+125]
       // console.log(planeBorder[0], planeBorder[1])
-      if (pos1 === '1' && ((planeBorder[0] >= 275 && planeBorder[0] <= 550) || (planeBorder[1] >= 275 && planeBorder[1] <= 550) || (planeBorder[0] <= 275 && planeBorder[1] >= 550))) {
+      if (pos1 === '1' && ((planeBorder[0] >= region[0] + 180 && planeBorder[0] <= region[0] + 180 + region[1]/5) || (planeBorder[1] >= region[0] + 200 && planeBorder[1] <= region[0] + 180 + region[1]/5) || (planeBorder[0] <= region[0] + 200 && planeBorder[1] >= region[0] + 180 + region[1]/5))) {
         setCollision(true)
         setBroken1(true)
         setLife(life - 1)
@@ -43,7 +43,7 @@ function Obstacle() {
       }
 
       // collision region 2 [825-110, 825+110]
-      if (pos2 === '1' && ((planeBorder[0] >= 715 && planeBorder[0] <= 935) || (planeBorder[1] >= 715 && planeBorder[1] <= 935) || (planeBorder[0] <= 715 && planeBorder[1] >= 935))) {
+      if (pos2 === '1' && ((planeBorder[0] >= region[0] + 200 + 3*region[1]/10 && planeBorder[0] <= region[0] + 7 * region[1] / 10 - 200) || (planeBorder[1] >= region[0] + 200 + 3*region[1]/10 && planeBorder[1] <= region[0] + 7 * region[1] / 10 - 200) || (planeBorder[0] <= region[0] + 200 + 3*region[1]/10 && planeBorder[1] >= region[0] + 7 * region[1] / 10 - 200))) {
         setCollision(true)
         setBroken2(true)
         setLife(life - 1)
@@ -51,7 +51,7 @@ function Obstacle() {
       }
 
       // collision region 3 [1225-125, 1225+150]
-      if (pos3 === '1' && ((planeBorder[0] >= 1100 && planeBorder[0] <= 1375) || (planeBorder[1] >= 1100 && planeBorder[1] <= 1375) || (planeBorder[0] <= 1100 && planeBorder[1] >= 1375))) {
+      if (pos3 === '1' && ((planeBorder[0] >= region[0] + 4 * region[1] / 5 - 180 && planeBorder[0] <= region[0] + region[1] - 180) || (planeBorder[1] >= region[0] + 4 * region[1] / 5 - 180 && planeBorder[1] <= region[0] + region[1] - 180) || (planeBorder[0] <= region[0] + 4 * region[1] / 5 - 180 && planeBorder[1] >= region[0] + region[1] - 180))) {
         setCollision(true)
         setBroken3(true)
         setLife(life - 1)

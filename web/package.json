@@ -10,10 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@babel/core": "7.4.0",
+    "@babel/preset-env": "7.1.6",
     "@mui/material": "^5.15.17",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-native": "^0.74.1"
+    "@react-three/drei": "^9.106.0",
+    "@react-three/fiber": "^8.16.7",
+    "@types/three": "^0.165.0",
+    "@types/web-bluetooth": "^0.0.20",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "^0.74.1",
+    "three": "^0.165.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

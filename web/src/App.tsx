@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useData } from "./hooks/useData.tsx";
+import { useBLE } from "./hooks/useBLE.tsx";
 import { StartPage } from "./component/startPage.tsx";
 import { Player } from "./component/player.tsx";
 import { Obstacle } from "./component/obstacle.tsx";
@@ -9,7 +10,8 @@ import { ScoreBar } from "./component/scoreBar.tsx";
 import './style/App.css'
 
 function App() {
-  const { start, gameover, life, setStart, setLife, setTick, setSpeed, setObstaclePos, setPlanePos, setGameOver, setPlaneState, setScore} = useData();
+  const { start, gameover, life, setStart, setLife, setTick, setSpeed, setObstaclePos, setPlanePos, setGameOver, setPlaneState, setScore, setRegion} = useData();
+  const { bleStatus } = useBLE();
   const colRef = useRef<HTMLDivElement | null>(null);
 
   const init = () => {
@@ -21,11 +23,13 @@ function App() {
     setGameOver(false)
     setPlaneState(0)
     setScore(0)
+    setRegion([colRef.current!.offsetLeft, colRef.current!.offsetWidth])   // left, width
   }
 
   useEffect(() => {
-    if (start) {
+    if (start && bleStatus) {
       init()
+      // console.log(colRef.current!.offsetLeft, colRef.current!.offsetWidth)
     }
   }, [start])
 
