@@ -73,6 +73,8 @@ class SensorDemo : ble::Gap::EventHandler {
         BSP_MAGNETO_Init();
         BSP_GYRO_Init();
 
+        button.fall(Callback<void()>(this, &SensorDemo::button_pressed));
+        button.rise(Callback<void()>(this, &SensorDemo::button_released));
         /* This allows us to receive events like onConnectionComplete() */
         _ble.gap().setEventHandler(this);
 
@@ -172,8 +174,13 @@ class SensorDemo : ble::Gap::EventHandler {
         _sensor_service.updateGyroDataXYZ(_GyroDataXYZ);
     }
     /*********************Button***********************/
+    void write_command(){
+        _sensor_service.write(1);
+    }
     void button_pressed() {}
-    void button_released() { _sensor_service.write(1); }
+    void button_released() {
+        _event_queue.call(Callback<void()>(this, &SensorDemo::write_command));
+    }
     /**************************************************/
     void gather_data() {  // gather data every 1ms
         BSP_ACCELERO_AccGetXYZ(sensorData);

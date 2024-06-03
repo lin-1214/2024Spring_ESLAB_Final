@@ -15,7 +15,7 @@
 #ifndef PI
     #define PI 3.14159265358979
 #endif
-#define COMMAND_MIN 16
+#define COMMAND_MIN 20
 class SensorService : public ble::GattServer::EventHandler {
    public:
     const static uint16_t WRITABLE_CHARACTERISTIC_UUID = 0xA001;
@@ -63,7 +63,7 @@ class SensorService : public ble::GattServer::EventHandler {
     void updateGyroDataXYZ(GyroType_t newpGyroDataXYZ) {
         short vel = convertToVelocity(newpGyroDataXYZ);
         // GyroType_t vel = convertToVelocity(newpGyroDataXYZ);
-        printf("%d\n", vel);
+        printf("[vel]: %d\n", vel);
         ble.gattServer().write(GyroCharacteristic.getValueHandle(), (uint8_t *)&vel,
                                sizeof(short));
     }
@@ -71,6 +71,7 @@ class SensorService : public ble::GattServer::EventHandler {
         if (command < COMMAND_MIN) {
             command += COMMAND_MIN;
         }
+        printf("[command]: %d\n", command);
         ble.gattServer().write(GyroCharacteristic.getValueHandle(), (uint8_t *)&command,
                                sizeof(int16_t));
     }
