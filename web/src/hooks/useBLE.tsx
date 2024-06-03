@@ -95,7 +95,7 @@ const BLEProvider: FC<BLEProviderProps> = (props: any) => {
     };
     return (
         <BLEContext.Provider
-            value={{ server, readCharacteristic, writeCharacteristic, connect, velocity, write, bleStatus}}
+            value={{ server, readCharacteristic, writeCharacteristic, connect, velocity, write, bleStatus, command}}
             {...props}
         />
     );
