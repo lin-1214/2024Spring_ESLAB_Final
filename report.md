@@ -26,7 +26,11 @@ Videos on YT looks cool
 
 ## Result
 
-
+- Build project
+- BLE connection with web
+- Control
+- Animation
+- Response
 
 ## Reference
 
