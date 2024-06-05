@@ -113,8 +113,8 @@ class SensorService : public ble::GattServer::EventHandler {
                     vibrate(500ms, 4);
                     break;
                 default:
-                    // 無效的case_id
-                    pwm.write(0.0); // 確保震動馬達停止
+                    // 
+                    pwm.write(0.0); 
                     break;
             }
         }
