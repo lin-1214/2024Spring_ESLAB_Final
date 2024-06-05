@@ -9,6 +9,7 @@
 #include "ble/BLE.h"
 #include "ble/GattServer.h"
 #include "mbed.h"
+#include <chrono>
 
 #define CUSTOM_GYRO_CHAR_UUID "43080fde-e247-4bd5-b7b2-6c80ec3e526e"
 #define CUSTOM_SENSOR_SERVICE_UUID "e31368d2-3247-4b01-8ece-3a2bf602808f"
@@ -76,29 +77,41 @@ class SensorService : public ble::GattServer::EventHandler {
                                sizeof(int16_t));
     }
 
+    inline void vibrate(std::chrono::milliseconds duration, int repetitions, std::chrono::milliseconds interval = 500ms) {
+        for (int i = 0; i < repetitions; ++i) {
+            pwm.write(0.5); // 50%的占空比，調整來改變震動強度
+            ThisThread::sleep_for(duration); // 震動持續時間
+            pwm.write(0.0); // 停止震動
+            if (i < repetitions - 1) {
+                ThisThread::sleep_for(interval); // 間隔時間，最後一次不需要間隔
+            }
+        }
+    }   
+
     virtual void onDataWritten(const GattWriteCallbackParams &params) override {
         if ((params.handle == _writable_characteristic->getValueHandle()) && (params.len == 1)) {
             printf("New characteristic value written: %x\r\n", *(params.data));
             uint8_t value = *(params.data);
             switch (value) {
                 case 1:
-                    pwm.period(0.001f);  // 1 kHz
-                    pwm.write(0.5f);     // 50% duty cycle
+                    // 震動1秒1次
+                    vibrate(1s, 1);
                     break;
                 case 2:
-                    pwm.period(0.002f);  // 500 Hz
-                    pwm.write(0.25f);    // 25% duty cycle
+                    // 震動0.5秒2次
+                    vibrate(500ms, 2);
                     break;
                 case 3:
-                    pwm.period(0.004f);  // 250 Hz
-                    pwm.write(0.75f);    // 75% duty cycle
+                    // 震動2秒1次
+                    vibrate(2s, 1);
                     break;
                 case 4:
-                    pwm.period(0.008f);  // 125 Hz
-                    pwm.write(0.1f);     // 10% duty cycle
+                    // 震動0.5秒4次
+                    vibrate(500ms, 4);
                     break;
                 default:
-                    pwm.write(0.0f);  // turn off
+                    // not work
+                    pwm.write(0.0); //stop working 
                     break;
             }
         }
