@@ -5,13 +5,20 @@ import './startPage.css'
 
 function StartPage() {
   const { setStart } = useData();
-  const { connect, bleStatus } = useBLE();
+  const { connect, command, bleStatus } = useBLE();
 
   useEffect(() => {
     if (bleStatus) {
       alert("Successfully connected to BLE device!")
     }
   }, [bleStatus])
+
+  useEffect(() => {
+    if (command > 16) {
+      setStart(true)
+    }
+    
+  }, [command])
 
   return (
     <div className="StartWrapper">

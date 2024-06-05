@@ -7,17 +7,17 @@ import { Obstacle } from "./component/obstacle.tsx";
 import { LifeBar } from "./component/lifeBar.tsx";
 import { GameOverPage } from "./component/gameOverPage.tsx";
 import { ScoreBar } from "./component/scoreBar.tsx";
+import { Galaxy } from "./component/galaxy.tsx";
 import './style/App.css'
 
 function App() {
-  const { start, gameover, life, setStart, setLife, setTick, setSpeed, setObstaclePos, setPlanePos, setGameOver, setPlaneState, setScore, setRegion} = useData();
+  const { start, gameover, life, setStart, setLife, setTick, setObstaclePos, setPlanePos, setGameOver, setPlaneState, setScore, setRegion} = useData();
   const { bleStatus } = useBLE();
   const colRef = useRef<HTMLDivElement | null>(null);
 
   const init = () => {
     setLife(3)
     setTick(0)
-    setSpeed(40)
     setObstaclePos(0)
     setPlanePos(0)
     setGameOver(false)
@@ -27,6 +27,7 @@ function App() {
   }
 
   useEffect(() => {
+    // console.log(life)
     if (start && bleStatus) {
       init()
       // console.log(colRef.current!.offsetLeft, colRef.current!.offsetWidth)
@@ -34,10 +35,10 @@ function App() {
   }, [start])
 
   useEffect(() => {
-    console.log(life)
-    if (life <= 0) {
+    if (life < 0) {
       setGameOver(true)
       setStart(false)
+      setLife(3)
     }
   }, [life])
 
@@ -52,6 +53,7 @@ function App() {
         <div className="GameWrapper">
           <div className="MeteorContainer">
             <Obstacle />
+            <Galaxy/>
           </div>
           {/* <div className="BlankContainer"></div> */}
           <div className="PlayerContainer" ref={colRef}>

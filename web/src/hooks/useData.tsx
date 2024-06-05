@@ -7,7 +7,7 @@ interface DataProps {
     // 0: same, 1: right, -1: left
     planeState: number;
     planePos: number;
-    speed: number;
+    // speed: number;
     // 0 ~ 6: to bimomial is the position of the obstacle
     obstaclePos: number;
     collision: boolean;
@@ -28,7 +28,7 @@ interface DataProps {
     setReload: (reload: boolean) => void;
     setPlaneState: (planeState: number) => void;
     setPlanePos: (planePos: number) => void;
-    setSpeed: (speed: number) => void;
+    // setSpeed: (speed: number) => void;
     setObstaclePos: (obstaclePos: number) => void;
     setCollision: (collision: boolean) => void;
     setplaneBorder: (planeBorder: number[]) => void;
@@ -47,7 +47,7 @@ const Data = createContext<DataProps>({
     relaod: false,
     planeState: 0,
     planePos: 0,
-    speed: 0,
+    // speed: 0,
     obstaclePos: 0,
     collision: false,
     planeBorder: [0, 0],
@@ -64,7 +64,7 @@ const Data = createContext<DataProps>({
     setReload: () => {},
     setPlaneState: () => {},
     setPlanePos: () => {},
-    setSpeed: () => {},
+    // setSpeed: () => {},
     setObstaclePos: () => {},
     setCollision: () => {},
     setplaneBorder: () => {},
@@ -87,7 +87,7 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
     const [relaod, setReload] = useState(false);
     const [planeState, setPlaneState] = useState(0);
     const [planePos, setPlanePos] = useState(0);
-    const [speed, setSpeed] = useState(40);
+    // const [speed, setSpeed] = useState(40);
     const [obstaclePos, setObstaclePos] = useState(0);
     const [collision, setCollision] = useState(false);
     const [planeBorder, setplaneBorder] = useState([0, 0]);
@@ -107,7 +107,7 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
                 relaod,
                 planeState,
                 planePos,
-                speed,
+                // speed,
                 obstaclePos,
                 collision,
                 planeBorder,
@@ -123,7 +123,7 @@ const DataProvider: FC<UserDataProviderProps> = (props) => {
                 setReload,
                 setPlaneState,
                 setPlanePos,
-                setSpeed,
+                // setSpeed,
                 setObstaclePos,
                 setCollision,
                 setplaneBorder,

@@ -1,0 +1,40 @@
+.GalaxyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90vw;
+  height: 30vh;
+  /* border: 3px solid #fff; */
+  z-index: 1;
+}
+
+.Galaxy {
+    height: 30vh;
+    width: 25vw;
+    background-image: url("../assets/galaxy.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    animation: scaling 5s infinite ease-in-out;
+}
+
+.Planet {
+    height: 10vh;
+    width: 10vw;
+    /* border: 3px solid #fff; */
+    background-image: url("../assets/star.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    animation: scaling 5s infinite ease-in-out;
+}
+
+@keyframes scaling {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
