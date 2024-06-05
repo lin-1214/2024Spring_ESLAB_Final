@@ -78,15 +78,18 @@ class SensorService : public ble::GattServer::EventHandler {
     }
 
     inline void vibrate(std::chrono::milliseconds duration, int repetitions, std::chrono::milliseconds interval = 500ms) {
-        for (int i = 0; i < repetitions; ++i) {
-            pwm.write(0.5); // 50%的占空比，調整來改變震動強度
-            ThisThread::sleep_for(duration); // 震動持續時間
-            pwm.write(0.0); // 停止震動
-            if (i < repetitions - 1) {
-                ThisThread::sleep_for(interval); // 間隔時間，最後一次不需要間隔
-            }
+    for (int i = 0; i < repetitions; ++i) {
+        pwm.write(0.5); // 50% duty cycle
+        auto end_time = Kernel::Clock::now() + duration;
+        while (Kernel::Clock::now() < end_time) {
+            ThisThread::sleep_for(10ms); // 100Hz vibrating 
         }
-    }   
+        pwm.write(0.0); // stop
+        if (i < repetitions - 1) {
+            ThisThread::sleep_for(interval); // duration
+        }
+    }
+}
 
     virtual void onDataWritten(const GattWriteCallbackParams &params) override {
         if ((params.handle == _writable_characteristic->getValueHandle()) && (params.len == 1)) {
@@ -110,8 +113,8 @@ class SensorService : public ble::GattServer::EventHandler {
                     vibrate(500ms, 4);
                     break;
                 default:
-                    // not work
-                    pwm.write(0.0); //stop working 
+                    // 無效的case_id
+                    pwm.write(0.0); // 確保震動馬達停止
                     break;
             }
         }
@@ -159,3 +162,4 @@ class SensorService : public ble::GattServer::EventHandler {
 };
 
 #endif
+
