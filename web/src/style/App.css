@@ -19,6 +19,19 @@
   justify-content: center;
 }
 
+.BarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 90vw;
+  height: 10vh;
+  /* border: 3px solid #fff; */
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #fff;
+}
+
 .GameWrapper {
   display: flex;
   flex-direction: column;
@@ -26,7 +39,7 @@
   justify-content: center;
   height: 80vh;
   width: 90vw;
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
 }
 
 .MeteorContainer {
@@ -34,8 +47,8 @@
   flex-direction: column;
   align-items: center;
   width: 90vw;
-  height: 35vh;
-  border: 3px solid #fff;
+  height: 45vh;
+  /* border: 3px solid #fff; */
   font-size: 1.5em;
   font-weight: 700;
   color: #fff;
@@ -48,7 +61,7 @@
   justify-content: center;
   width: 90vw;
   height: 10vh;
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
   font-size: 1.5em;
   font-weight: 700;
   color: #fff;
@@ -61,5 +74,5 @@
   align-items: center;
   width: 90vw;
   height: 45vh;
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
 }

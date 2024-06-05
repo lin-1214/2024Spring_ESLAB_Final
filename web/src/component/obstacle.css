@@ -4,10 +4,20 @@
   justify-content: space-between;
   width: 15vw;
   height: 5vh;
+  z-index: 3;
 }
 
 .Obstacle {
   background-image: url("../assets/meteorite.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 5vh;
+  height: 5vh;
+}
+
+.ObstacleBroken {
+  animation: broke 100ms 1 ease-in;
+  background-image: url("../assets/meteoriteBroke.png");
   background-size: contain;
   background-repeat: no-repeat;
   width: 5vh;
@@ -24,4 +34,17 @@
   100% {
     transform: scale(6) translateY(20vh);
   }
+}
+
+@keyframs broke {
+  0% {
+    transform: scale(0.5) opacity(1);
+  }
+  25% {
+    transform: scale(1) opacity(1);
+  }
+  50% {
+    transform: scale(1) opacity(0);
+  }
+
 }

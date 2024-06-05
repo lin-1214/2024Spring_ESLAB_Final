@@ -8,7 +8,7 @@ function StartPage() {
     <div className="StartWrapper">
         <div className="container">
             <div className="title">Welcome to Space Conqueror</div>
-            <button onClick={() => {
+            <button className="startButton" onClick={() => {
                 setStart(true)
               }}
             >

@@ -1,0 +1,18 @@
+.scoreBarWrapper {
+    width: 30vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    background-image: url("../assets/barTexture.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 3px solid black;
+}
+
+.scoreBarTitle {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: black;
+    margin-right: 2vh;
+    margin-left: 2vh;
+}
