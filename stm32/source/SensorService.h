@@ -64,7 +64,7 @@ class SensorService : public ble::GattServer::EventHandler {
     void updateGyroDataXYZ(GyroType_t newpGyroDataXYZ) {
         short vel = convertToVelocity(newpGyroDataXYZ);
         // GyroType_t vel = convertToVelocity(newpGyroDataXYZ);
-        printf("[vel]: %d\n", vel);
+        //printf("[vel]: %d\n", vel);
         ble.gattServer().write(GyroCharacteristic.getValueHandle(), (uint8_t *)&vel,
                                sizeof(short));
     }
@@ -77,46 +77,25 @@ class SensorService : public ble::GattServer::EventHandler {
                                sizeof(int16_t));
     }
 
-    inline void vibrate(std::chrono::milliseconds duration, int repetitions, std::chrono::milliseconds interval = 500ms) {
-    for (int i = 0; i < repetitions; ++i) {
-        pwm.write(0.5); // 50% duty cycle
-        auto end_time = Kernel::Clock::now() + duration;
-        while (Kernel::Clock::now() < end_time) {
-            ThisThread::sleep_for(10ms); // 100Hz vibrating 
-        }
-        pwm.write(0.0); // stop
-        if (i < repetitions - 1) {
-            ThisThread::sleep_for(interval); // duration
+    inline void vibrate(std::chrono::milliseconds duration, int repetitions, std::chrono::milliseconds interval = 50ms) {
+        for (int i = 0; i < repetitions; ++i) {
+            pwm.write(0.5); // 50% duty cycle
+            auto end_time = Kernel::Clock::now() + duration;
+            while (Kernel::Clock::now() < end_time) {
+                ThisThread::sleep_for(10ms); // 100Hz vibrating 
+            }
+            pwm.write(0.0); // stop
+            if (i < repetitions - 1) {
+                ThisThread::sleep_for(interval); // duration
+            }
         }
     }
-}
 
     virtual void onDataWritten(const GattWriteCallbackParams &params) override {
         if ((params.handle == _writable_characteristic->getValueHandle()) && (params.len == 1)) {
             printf("New characteristic value written: %x\r\n", *(params.data));
             uint8_t value = *(params.data);
-            switch (value) {
-                case 1:
-                    // 震動1秒1次
-                    vibrate(1s, 1);
-                    break;
-                case 2:
-                    // 震動0.5秒2次
-                    vibrate(500ms, 2);
-                    break;
-                case 3:
-                    // 震動2秒1次
-                    vibrate(2s, 1);
-                    break;
-                case 4:
-                    // 震動0.5秒4次
-                    vibrate(500ms, 4);
-                    break;
-                default:
-                    // 
-                    pwm.write(0.0); 
-                    break;
-            }
+            vibrate(50ms, 10);
         }
     }
     int16_t convertToVelocity(GyroType_t GyroDataXYZ) {
