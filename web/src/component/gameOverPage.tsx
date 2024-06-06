@@ -17,7 +17,7 @@ function GameOverPage() {
   return (
     <div className="GameOverWrapper">
         <div className="GameOverContainer">
-            <div className="GameOverTitle">Game Over... Your score is "{score}"</div>
+            <div className="GameOverTitle">Game Over... Your score is {score}</div>
             <button className="GameOverButton" onClick={() => {
                 setStart(true)
               }}

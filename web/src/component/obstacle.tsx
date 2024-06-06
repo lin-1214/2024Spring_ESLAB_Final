@@ -31,8 +31,8 @@ function Obstacle() {
   }
 
   useEffect(() => {
-    // console.log(tick)
-    if (tick >= 220 && tick <= 325) {
+    console.log(tick)
+    if (tick >= 180 && tick <= 215) {
       // collision region 1 [260, 425+125]
       // console.log(planeBorder[0], planeBorder[1])
       // console.log(region[0] + 180, region[0] + 180 + region[1]/5)
@@ -66,8 +66,10 @@ function Obstacle() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      resetObstacle(0);
       setObstaclePos(Math.floor((Math.random() * 6 + 1)));
       // if (life <= 0) setLife(life - 1) 
+      // console.log(obstaclePos)
 
       mapping = dec2bin(obstaclePos);
       while (mapping.length < 3) {
@@ -89,7 +91,7 @@ function Obstacle() {
     }, 5000);
 
     return () => {
-      resetObstacle(0);
+      // resetObstacle(0);
       clearInterval(interval);
     }
   }, [obstaclePos])

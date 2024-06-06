@@ -17,7 +17,7 @@ const BLEContext = createContext({
     readCharacteristic: null,
     writeCharacteristic: null,
     connect: () => {},
-    write: (data: Int16Array) => {},
+    write: () => {},
     velocity: 0,
     command: 0,
     bleStatus: false,
@@ -79,7 +79,7 @@ const BLEProvider: FC<BLEProviderProps> = (props: any) => {
         }
         let data = new Int16Array(value.buffer);
         // console.log("Data received: ", data);
-        // console.log(data[0])
+        console.log(data[0])
         if (data[0] > 16) {
             setCommand(data[0]);
         } else {
@@ -87,13 +87,13 @@ const BLEProvider: FC<BLEProviderProps> = (props: any) => {
             setVelocity(data[0]);
         }
     };
-    const write = (data: Int16Array) => {
+    const write = () => {
         if (!writeCharacteristic) {
             console.error("Write characteristic is not available");
             return;
         }
-        // writecharacteristic?.writeValue(new Uint8Array([0x02]));
-        writeCharacteristic.writeValueWithResponse(data);
+        writeCharacteristic?.writeValue(new Uint8Array([0x02]));
+        // writeCharacteristic.writeValueWithResponse(data);
     };
     return (
         <BLEContext.Provider

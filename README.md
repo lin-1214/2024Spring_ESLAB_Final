@@ -11,7 +11,7 @@ Follow these steps to install the project:
 1. Clone the project:
 
    ```bash
-   git clone https://github.com/yourusername/2024Spring_ESLAB_Final.git
+   git clone https://github.com/lin-1214/2024Spring_ESLAB_Final.git
 
 2. Open the project with Mbed Studio.
 3. Fix the required libraries:\
@@ -23,6 +23,25 @@ Follow these steps to install the project:
 
 ## Web
 
+1. Clone the project:
+
+   ```bash
+   git clone https://github.com/lin-1214/2024Spring_ESLAB_Final.git
+
+2. Go to the web directory
+
+   ```
+   cd ./web
+
+3. Install the packages
+
+   ```
+   pnpm install
+4. Run up the website
+
+   ```
+   pnpm vite
+5. Connect STM32 by BLE and enjoy the game   
 ## Connection
 
 ## How to play

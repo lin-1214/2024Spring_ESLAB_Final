@@ -43,17 +43,17 @@ function Player() {
 
   const handleSTM = (velocity: number) => {
     if (!collision) {
-      if (velocity > 1 && planePos + velocity/mul <= 1080) {
+      if (velocity > 0 && planePos + velocity/mul <= 1080) {
         setPlaneState(1)
         setPlanePos(planePos + velocity/mul)
-      } else if (velocity < -1 && planePos + velocity/mul >= -1080) {
+      } else if (velocity < -0 && planePos + velocity/mul >= -1080) {
         setPlaneState(-1)
         setPlanePos(planePos + velocity/mul)
-      } else if (Math.abs(velocity) <= 1 && planeState == 1) {
+      } else if (Math.abs(velocity) == 0 && planeState == 1) {
         setPlaneState(2)
-      } else if (Math.abs(velocity) <= 1 && planeState == -1) {
+      } else if (Math.abs(velocity) == 0 && planeState == -1) {
         setPlaneState(-2)
-      } else if (Math.abs(velocity) <= 1) {
+      } else if (Math.abs(velocity) == 0) {
         setPlaneState(0)
       }
     }
@@ -76,10 +76,9 @@ function Player() {
   useEffect(() => {
     // console.log(collision)
     if (collision) {
-      // console.log('collision')
       setPlaneState(0)
       // TODO: write to stm32
-      // write(new Int16Array([0, 1]))
+      // write()
       
     } else if (life <= 0) setLife(life - 1)
 
@@ -108,7 +107,8 @@ function Player() {
   })
   
   return (
-    <>{collision? <div className="Player-C" ref={playerRef} style={{marginLeft: planePos}}></div>:
+    <>{life <= 0? <div className="Player-B" ref={playerRef} style={{marginLeft: planePos}}></div>:
+      collision? <div className="Player-C" ref={playerRef} style={{marginLeft: planePos}}></div>:
       planeState === 0? <div className="Player" ref={playerRef} style={{marginLeft: planePos}}></div>:
       planeState === 1? <div className="Player-R" ref={playerRef} style={{marginLeft: planePos, rotate: '45deg'}}></div>:
       planeState === -1? <div className="Player-L" ref={playerRef} style={{marginLeft: planePos, rotate: '-45deg'}}></div>:
