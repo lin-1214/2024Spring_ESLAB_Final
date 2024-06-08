@@ -1,5 +1,5 @@
 import React from 'react'
-import './galaxy.css'
+import '../styles/galaxy'
 
 function Galaxy() {
     return (

@@ -32,7 +32,6 @@ Follow these steps to install the project:
 
    ```
    cd ./web
-
 3. Install the packages
 
    ```
@@ -44,4 +43,19 @@ Follow these steps to install the project:
 5. Connect STM32 by BLE and enjoy the game   
 ## Connection
 
+1. Set up the web browser and STM32 following the steps mentioned above.
+2. Press the button to start finding BLE device
+   ![image](/img/img04.png)
+
+3. Once the STM32 connected, you can start the game!
+
 ## How to play
+1. Press the blue button on STM32 to start the game
+![image](/img/img05.png)
+
+2. Gaming display
+![image](/img/img06.png)
+
+2. Try your best to dodge the meteorite and get a higher score!
+
+3. Once your life become 0, the game is over, and you can press the blue button on STM32 to start over again.

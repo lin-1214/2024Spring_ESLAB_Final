@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { useData } from "../hooks/useData";
-import './scoreBar.css'
+import '../styles/scoreBar.css'
 
 function ScoreBar() {
   const { score, setScore } = useData();

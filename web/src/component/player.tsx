@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useData } from "../hooks/useData";
 import { useBLE } from "../hooks/useBLE";
-import './player.css'
+import '../styles/player.css'
 
 declare global {
     interface WindowEventMap {
@@ -78,7 +78,7 @@ function Player() {
     if (collision) {
       setPlaneState(0)
       // TODO: write to stm32
-      // write()
+      write()
       
     } else if (life <= 0) setLife(life - 1)
 

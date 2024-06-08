@@ -1,6 +1,6 @@
 import React from "react";
 import { useData } from "../hooks/useData";
-import './lifeBar.css'
+import '../styles/lifeBar.css'
 import { grey } from "@mui/material/colors";
 
 function LifeBar() {

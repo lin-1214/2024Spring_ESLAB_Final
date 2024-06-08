@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useData } from "../hooks/useData";
-import './obstacle.css'
+import '../styles/obstacle.css'
 
 function Obstacle() {
   const { obstaclePos, setObstaclePos, collision, setCollision, planeBorder, tick, life, setTick, setLife, region } = useData();
@@ -32,7 +32,7 @@ function Obstacle() {
 
   useEffect(() => {
     console.log(tick)
-    if (tick >= 180 && tick <= 215) {
+    if (tick >= 180 && tick <= 230) {
       // collision region 1 [260, 425+125]
       // console.log(planeBorder[0], planeBorder[1])
       // console.log(region[0] + 180, region[0] + 180 + region[1]/5)

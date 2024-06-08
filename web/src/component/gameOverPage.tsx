@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useData } from "../hooks/useData.js"
 import { useBLE } from "../hooks/useBLE.js"
-import './gameOverPage.css'
+import '../styles/gameOverPage.css'
 
 function GameOverPage() {
   const { setStart, score } = useData();

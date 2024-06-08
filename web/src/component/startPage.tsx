@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useData } from "../hooks/useData.js"
 import { useBLE } from "../hooks/useBLE.js"
-import './startPage.css'
+import '../styles/startPage.css'
 
 function StartPage() {
   const { setStart } = useData();
