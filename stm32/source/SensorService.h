@@ -57,7 +57,7 @@ class SensorService : public ble::GattServer::EventHandler {
                                   sizeof(charTable) / sizeof(GattCharacteristic *));
 
         ble.gattServer().addService(sensorService);
-        ble.gattServer().setEventHandler(this);  // 设置事件处理程序
+        ble.gattServer().setEventHandler(this);  
         serviceAdded = true;
     }
 

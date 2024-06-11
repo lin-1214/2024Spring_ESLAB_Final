@@ -21,13 +21,14 @@ Videos on YT looks cool
 - ***STM32 IoT node***
 
   - **BLE connection**
-    - Sensor Service
+    - Customize Service and UUIDs
     - Notify Characteristic
     - Writable Characteristic - Accept the signal from web and make reaction, i.e. `collision response`.
-  - **DMA programming** - Low Pass Filter
-  - **PWM wave** - Send signals to the beeper.
+  - **DMA programming** - Low Pass Filter for Accelero values.
+  - **PWM wave** - Send signals to the beeper with 100Hz wave every 50ms for 10 times.![screenshot](/img/img09.png)
+  
   - **Data Acquisition** - read BSP sensor and send to buffer.
-  - **Circular buffer**
+  - **Circular buffer** - store the datas read from sensor onboard.
   
 - ***Web***
   - **file structure**
@@ -113,7 +114,23 @@ Follow these steps to install the project:
 - Control
 - Animation
 - Response
+- [Demo Video](https://drive.google.com/file/d/1MnjLGypI6-sU0xRZzgUswl1qq9AR_XP6/view?usp=sharing)
+
+## Problem We Met
+
+- Vibrate motor not working - use a beeper to replace it.
+- Sensor Value not too accurate - apply a filter to make it more stable.
+- Writable characteristic not working originally - refer to the Mbed BLE example to figure out the problem.
+
+## Future Work
+
+- With more control part.
+- Game in more dimension.
+- Optimal animation.
+- More entertainment.
+- More precise control signal.
 
 ## Reference
 
 - [DIY Bluetooth GamePad for Android, PlayStation and PC.](https://www.youtube.com/watch?v=zOuCZpH0Dqg)
+- [Mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble/tree/development)
