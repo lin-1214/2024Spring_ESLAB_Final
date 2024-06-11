@@ -139,6 +139,10 @@ Follow these steps to install the project:
 - More entertainment.
 - More precise control signal.
 
+## Github
+
+[https://github.com/lin-1214/2024Spring_ESLAB_Final](https://github.com/lin-1214/2024Spring_ESLAB_Final)
+
 ## Reference
 
 - [DIY Bluetooth GamePad for Android, PlayStation and PC.](https://www.youtube.com/watch?v=zOuCZpH0Dqg)
