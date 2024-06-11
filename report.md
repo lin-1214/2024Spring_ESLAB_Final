@@ -5,6 +5,10 @@ This is the report of the eslab final project.
 Group: 3\
 Members: B10901027楊竣凱、B10901059林咏毅、B10502139許禎勻
 
+## Description
+
+This project is a game developed using the STM32 IoT Node and web interactions. It aims to implement game functionalities through actual hardware controls and web interactions.
+
 ## Motivaiton
 
 - Design a PC game with peripheral game pad.
